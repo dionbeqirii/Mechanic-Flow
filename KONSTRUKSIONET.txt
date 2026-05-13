@@ -1,7 +1,0 @@
-BACKEND
-cd backend 
-npx nodemon server.js
-
-Frontend
-cd frontend
-npm run dev
