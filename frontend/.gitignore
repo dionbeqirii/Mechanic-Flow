@@ -22,3 +22,16 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+# Injoro folderat e rëndë të librarive
+node_modules/
+backend/node_modules/
+frontend/node_modules/
+
+# Injoro skedarët sekretë të konfigurimit
+.env
+backend/.env
+
+# Injoro skedarët e sistemit operativ
+.DS_Store
+Thumbs.db
+

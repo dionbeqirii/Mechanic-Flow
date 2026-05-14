@@ -44,4 +44,43 @@ router.post('/login', async (req, res) => {
     }
 });
 
+// 3. RIVENDOS FJALËKALIMIN
+router.post('/forgot-password', async (req, res) => {
+    try {
+        const { email } = req.body;
+        const user = await User.findOne({ email });
+        if (!user) {
+            return res.json({ message: 'Nëse emaili ekziston, fjalëkalimi i ri u dërgua.' });
+        }
+        const tempPass = Math.random().toString(36).slice(-8);
+        user.password = tempPass;
+        await user.save();
+        res.json({ message: 'Fjalëkalimi u rivendos me sukses!', tempPassword: tempPass });
+    } catch (err) {
+        res.status(500).json({ message: 'Gabim në server' });
+    }
+});
+
+// 4. LISTA E STAFIT
+router.get('/staff', async (req, res) => {
+    try {
+        const staff = await User.find().select('-password').sort({ createdAt: -1 });
+        res.json(staff);
+    } catch (err) {
+        res.status(500).json({ message: 'Gabim gjatë marrjes së stafit' });
+    }
+});
+
+// 4. NDRYSHO PROFILIN
+router.put('/profile', async (req, res) => {
+    try {
+        const { id, name } = req.body;
+        const user = await User.findByIdAndUpdate(id, { name }, { new: true }).select('-password');
+        if (!user) return res.status(404).json({ message: 'Përdoruesi nuk u gjet' });
+        res.json({ id: user._id, name: user.name, email: user.email });
+    } catch (err) {
+        res.status(500).json({ message: 'Gabim gjatë përditësimit', error: err.message });
+    }
+});
+
 module.exports = router;
